@@ -1,4 +1,4 @@
-﻿namespace Sabio.Models.Domain
+﻿namespace Flow.Models.Domain
 {
     public class SiteReference : LookUp
     {
