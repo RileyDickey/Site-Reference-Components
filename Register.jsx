@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AccountLayout from './AccountLayout';
 import userService from '../../services/userService';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import debug from 'sabio-debug';
+import debug from 'debug';
 import { useTranslation } from 'react-i18next';
 import { Button, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter, Dropdown } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
@@ -17,42 +17,13 @@ import {FcGoogle} from 'react-icons/fc';
 import Facebook from '../../components/facebook/Facebook';
 import { FaFacebookSquare } from 'react-icons/fa';
 
-const userRoles = [
-    {
-        id: 1,
-        name: 'User',
-    },
-    {
-        id: 4,
-        name: 'Organization',
-    },
-    {
-        id: 5,
-        name: 'Subcontractor',
-    },
-    {
-        id: 6,
-        name: 'OrgAdmin',
-    },
-    {
-        id: 7,
-        name: 'Employee',
-    },
-];
 
 function Register() {
     const _logger = debug.extend('Register');
     const { t } = useTranslation();
     const navigate = useNavigate();
 
-    const [userFormData] = useState({
-        email: '',
-        password: '',
-        passwordConfirm: '',
-        agreeTerms: false,
-        newRefType: '',
-    });
-
+    
     const [showThirdParty, updateShowThirdParty] = useState(false);
     const [refTypes, setRefTypes] = useState([]);
     const [roles, updateRoles] = useState([]);
@@ -215,34 +186,7 @@ function Register() {
 
     const rolesItems = roles.map(rolesDropdownMapper);
 
-    const onRegisterWithGoogleClick = () => {
-        updateShowThirdParty(!showThirdParty)
-    }
-
-    const onGoogleRegisterClick = (gData) => 
-    {
-        const registerData = 
-        {
-            email: gData.profileObj.email,
-            accessToken: gData.accessToken,
-            tokenType: 4,
-            roleId: roleSelection.id
-        }
-        userService.googleRegister(registerData).then(onRegisterSuccess).catch(onRegisterError)
-    }
-
-    const onFacebookRegisterClick = (fbData) => 
-    {
-        _logger(fbData)
-        const registerData = 
-        {
-            email: fbData.email,
-            accessToken: fbData.accessToken,
-            tokenType: 3,
-            roleId: roleSelection.id
-        }
-       userService.fbRegister(registerData).then(onRegisterSuccess).catch(onRegisterError)
-    }
+    
 
     return (
         <React.Fragment>
@@ -398,21 +342,6 @@ function Register() {
                             </Col>
                         </Row>
                     </div>
-                    <Row className="mt-2 text-center">
-                        <Col>
-                            <GoogleLogin 
-                            buttonText="Register"
-                            onClick={onGoogleRegisterClick}
-                            isDisabled={selection.name === null && userFormData.newRefType === '' ? true : false || roleSelection.name === null ? true : false}
-                            />
-                        </Col>
-                        <Col>
-                            <Facebook 
-                                buttonText='Register'
-                                onClick={onFacebookRegisterClick}
-                            />
-                        </Col>
-                    </Row>
                 </Form>
             </Formik>
         </AccountLayout>}
